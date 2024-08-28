@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Recipe</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+    .btn-custom{
+    padding: 10px 20px;
+    margin: 0 5px;
+    cursor: pointer;
+    color: white;
+    border-radius: 10px;
+    background-color: #a95597;
+        }
+    .btn-custom:hover{
+    background-color: pink;
+}
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <a href="javascript:history.back()" class="btn btn-secondary ml-2">Back</a>
+        <h1 class="mb-4">Edit Recipe</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="name">Recipe Name</label>
+                <input type="text" class="form-control" id="name" name="name" value="{{ recipe.name }}">
+            </div>
+            <div class="form-group">
+                <label for="ingredients">Ingredients</label>
+                <textarea class="form-control" id="ingredients" name="ingredients" rows="3">{{ recipe.ingredients }}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="3">{{ recipe.description }}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="image">Image</label>
+                <input type="file" class="form-control-file" id="image" name="image">
+                {% if recipe.image %}
+                    <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}" class="img-thumbnail mt-2" width="150">
+                {% endif %}
+            </div>
+            <button type="submit" class="btn btn-custom">Save Changes</button>
+        </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

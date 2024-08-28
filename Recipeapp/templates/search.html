@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recipe Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex; 
+            /* justify-content: center; */
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        } 
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 80%;
+            max-width: 600px;
+            margin: 30px;
+            height: auto;
+            align-items: center;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            margin-top: 20px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 80%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #c162c5;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #9e50ac;
+        }
+        .results {
+            margin-top: 20px;
+            text-align: left;
+        }
+        .result-item {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 0;
+        }
+        .pagination li {
+            margin: 0 5px;
+        }
+        .pagination a {
+            text-decoration: none;
+            color: #ce6bc9;
+            padding: 8px 16px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .pagination a:hover {
+            background-color: #e9ecef;
+        }
+        .pagination .active a {
+            background-color: #c455ac;
+            color: white;
+            border-color: #ce6bc9;
+        }
+        .pagination .disabled a {
+            color: #6c757d;
+            pointer-events: none;
+        }
+        .h-container {
+            background-color: #333;
+            width: 100%;
+            
+        }
+        .h-container a {
+            float: right;
+            color: white;
+            text-align: left;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-size: 17px;
+        }
+        .h-container a:hover {
+            background-color: #c455ac;
+            color: black;
+        }
+        .h-container a.active {
+            background-color: #f5f5f5;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <div class="h-container">
+        <a href="{% url 'search' %}" class="active" >Search</a>
+        <a href="{% url 'create-ui'%}" >Create</a>
+    </div>
+    <div class="container">
+        <h1>Search for Recipes</h1>
+        <form method="GET" action="{% url 'search-recipe' %}">
+        <input type="text" name="query" value="{{ query }}" placeholder="Enter ingredients/name">
+        <button type="submit">Search</button>
+        </form>
+        <div class="results">
+            {% if page_obj %}
+                <h2>Search Results:</h2>
+                {% for recipe in page_obj %}
+                    <div class="result-item">
+                        <h3>{{ recipe.strMeal }}</h3>
+                        <div><img src="{{ recipe.strMealThumb }}" alt="{{ recipe.strMeal }}" width="200"></div>
+                        <p><strong>Directions:</strong>{{ recipe.strInstructions }}</p>
+                    </div>
+                {% endfor %}
+                <div class="pagination-container">
+                    <ul class="pagination">
+                        {% if page_obj.has_previous %}
+                            <li><a href="?query={{ query }}&page=1">First</a></li>
+                            <li><a href="?query={{ query }}&page={{ page_obj.previous_page_number }}">Previous</a></li>
+                        {% else %}
+                            <li class="disabled"><span>First</span></li>
+                            <li class="disabled"><span>Previous</span></li>
+                        {% endif %}
+            
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                                <li class="active"><a href="?query={{ query }}&page={{ num }}">{{ num }}</a></li>
+                            {% else %}
+                                <li><a href="?query={{ query }}&page={{ num }}">{{ num }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+            
+                        {% if page_obj.has_next %}
+                            <li><a href="?query={{ query }}&page={{ page_obj.next_page_number }}">Next</a></li>
+                            <li><a href="?query={{ query }}&page={{ page_obj.paginator.num_pages }}">Last</a></li>
+                        {% else %}
+                            <li class="disabled"><span>Next</span></li>
+                            <li class="disabled"><span>Last</span></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            {% else %}
+                <p>No results found.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
