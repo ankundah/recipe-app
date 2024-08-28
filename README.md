@@ -1,5 +1,3 @@
-# recipe-app
-
 # Recipe WebApp
 
 Welcome to the Recipe WebApp! This app allows users to create, save, and search for recipes using ingredients. We utilize the MealDB API to fetch a wide variety of recipes.
