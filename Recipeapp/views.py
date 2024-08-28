@@ -10,12 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from .models import Recipe
 
-# API_KEY = "95ab8203422b4c88b570767bd22eb460"
-# BASE_URL = "https://api.spoonacular.com/recipes/"
-
-API_KEY = "1"
 BASE_URL = "http://www.themealdb.com/api/json/v1/1/search.php?s=" 
-
 
 def search_recipes(request):
     query = request.GET.get('query')
