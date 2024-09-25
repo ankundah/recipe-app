@@ -8,7 +8,7 @@ Welcome to the Recipe WebApp! This app allows users to create, save, and search 
 - **Save Recipes**: Save your favorite recipes for easy access later.
 - **Search by Ingredients**: Use the MealDB API to search for recipes based on the ingredients you have on hand.
 - **CRUD API**: The app includes a CRUD (Create, Read, Update, Delete) API for managing recipes in the backend.
-
+- **Identity Server**: WSO2 Identity Server is integrated into the application to facilitate secure user login and authentication as well as user management.”
 ## CRUD API
 
 The app provides a CRUD API for managing recipes. Here are the endpoints:
