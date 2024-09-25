@@ -26,6 +26,7 @@ The app provides a CRUD API for managing recipes. Here are the endpoints:
 - **HTML**: For page structure.
 - **Django**: As the server-side framework.
 - **Python**: For backend logic.
+- **wso2 Identity Server**: For user authentication.
 
 ## Contributing
 
