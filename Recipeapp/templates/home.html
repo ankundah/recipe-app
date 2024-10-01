@@ -5,11 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="https://iili.io/dPVza0g.png">
     <title>Create Recipe</title>
     <style>
-        body{
-            background-color: #f5f5f5;
-        }
+        
+body{
+    background-color: #f5f5f5;
+}
 #recipeForm {
     display: flex;
     flex-direction: column;
@@ -116,18 +118,64 @@
     color: white;
     border-radius: 10px;
     background-color: #a95597;
+    text-decoration: none;
 }
 .btn-edit:hover{
     background-color: pink;
 }
+a{
+    text-decoration: none;
+}
+.message{
+    background-color: #d4edda;
+    color:#a95597 ;
+    padding: 10px;
+    border: 1px solid #a95597;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+}
+#confirmationPopup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+.recipe-card img{
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+}
+.btn-show-more {
+    background-color: transparent;
+    border: none;
+    color: rgb(238, 8, 246);
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 15px;
+}
     </style>
+
 </head>
 <body>
+    {% if messages %}
+     {% for message in messages %}
+     <div id="success-message" class="message">{{message}}</div>
+     {% endfor %}
+     {% endif %}
         <div class="tab-container">
             <button class="btn btn-custom" onclick="openTab(event, 'recipeForm')">Create</button>
-            <button class="btn btn-custom " onclick="openTab(event, 'recipesList')">View</button>
-            <button class="btn btn-custom "><a href="{% url 'search' %}">Search</a></button>
-    </div>
+            <button class="btn btn-custom " onclick="openTab(event, 'recipesList')">Favs</button>
+            <button class="btn btn-custom "><a href="{% url 'search' %}">Search</a></button>   
+            <button class="btn btn-custom" onClick="auth.signOut()">Log Out</button>
+        </div>
         <form method="post" action="{%url 'create-ui' %}" id="recipeForm" enctype="multipart/form-data" class="tab-content">
         {% csrf_token %}
         <h3>Add a recipe</h3>
@@ -146,25 +194,61 @@
             <div class="recipe-card">
                 <h4>{{ recipe.name }}</h4>
                 <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}">
-                <p><strong> Ingredients:</strong>{{ recipe.ingredients }}</p>
-                <p><strong>Descriptions:</strong>{{ recipe.description }}</p>
-                <button class="btn btn-edit"><a href="{%url 'edit_recipe' recipe.id %}">Edit</a></button>
+                <p>
+                    <strong>Ingredients:</strong>
+                    <span class="truncated">{{ recipe.ingredients|truncatewords:25 }}</span>
+                    <span class="full-text" style="display:none;">{{ recipe.ingredients }}</span>
+                    <button class="btn-show-more">More</button>
+                </p>
+                <p>
+                    <strong>Instructions:</strong>
+                    <span class="truncated">{{ recipe.description|truncatewords:25 }}</span>
+                    <span class="full-text" style="display:none;">{{ recipe.description }}</span>
+                    <button class="btn-show-more">More</button>
+                </p>
+                <button class="btn btn-edit"><a href="{% url 'edit_recipe' recipe.id %}">Edit</a></button>
+                <button class="btn btn-edit"><a href="{% url 'delete_recipe' recipe.id %}">Delete</a></button>
             </div>
             {% endfor %}
-        {% else %}
-        <p>Create a Recipe to view it here!</p>
-        {% endif %}
+            {% else %}
+            <p>Create a Recipe to view it here!</p>
+            {% endif %}
         </div>
-      </div>
+    </div>
+    
+
+</body>
+
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+       <script src="https://unpkg.com/@asgardeo/auth-spa@latest/dist/asgardeo-spa.production.min.js"></script>
         <script>
-            function openTab(event, tabName) {
-       var i;
-       var tabContents = document.getElementsByClassName("tab-content");
-       var tabButtons = document.getElementsByClassName("tab-button");
+        var auth = AsgardeoAuth.AsgardeoSPAClient.getInstance();
+
+            auth.initialize({
+                signInRedirectURL: "http://127.0.0.1:8000/recipes/home",
+                signOutRedirectURL: "http://127.0.0.1:8000/recipes/index",
+                clientID: "SEZ4cf9FUU6GcpicSXxbbllB8n8a",
+                clientSecret: "wUEYQTDSYbJqoOp2dGkRiIhGvNlOGoAViRzzkFL2lAIa",
+                baseUrl: "https://localhost:9443/t/recipe.com",
+                scope: [ "openid", "profile", "create_recipe", "list_recipes", "update_recipe", "delete_recipe"]
+            });
+
+            function getBasicUserInfo(){
+                auth.getBasicUserInfo().then((userinfoResponse) => {
+                console.log(userinfoResponse); 
+                console.log(userinfoResponse.email);  
+         
+            }).catch((error) => {
+                console.error(error);
+            });
+         }
+        function openTab(event, tabName) {
+            var i;
+            var tabContents = document.getElementsByClassName("tab-content");
+            var tabButtons = document.getElementsByClassName("tab-button");
    
-       // Hide all tab contents
+       // Hide
        for (i = 0; i < tabContents.length; i++) {
            tabContents[i].style.display = "none";
            tabContents[i].classList.remove("active");
@@ -180,7 +264,29 @@
        document.getElementById(tabName).classList.add("active");
        event.currentTarget.classList.add("active");
    }
+   document.addEventListener('DOMContentLoaded', function(){
+    setTimeout(function(){
+        var message = 
+        document.getElementById('success-message');
+        if (message){
+            message.style.display = 'none';
+        }
+    }, 3000);
+   });
+   document.querySelectorAll('.btn-show-more').forEach(button => {
+    button.addEventListener('click', function() {
+        const fullText = this.previousElementSibling; 
+        const truncatedText = fullText.previousElementSibling; 
+        const isFullTextVisible = fullText.style.display === 'block';
+
+
+        fullText.style.display = isFullTextVisible ? 'none' : 'block';
+        truncatedText.style.display = isFullTextVisible ? 'inline' : 'none'; 
+        this.textContent = isFullTextVisible ? 'More' : 'Less';
+    });
+});
+
+
+    </script>
    
-        </script>
-   </body>
    </html>

@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Recipe Search</title>
+    <link rel="icon" type="image/x-icon" href="https://iili.io/dPVza0g.png">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -128,7 +129,7 @@
                     <div class="result-item">
                         <h3>{{ recipe.strMeal }}</h3>
                         <div><img src="{{ recipe.strMealThumb }}" alt="{{ recipe.strMeal }}" width="200"></div>
-                        <p><strong>Directions:</strong>{{ recipe.strInstructions }}</p>
+                        <p><strong>Directions:</strong>{{ recipe.strInstructions |truncatewords:30 }}</p>
                     </div>
                 {% endfor %}
                 <div class="pagination-container">

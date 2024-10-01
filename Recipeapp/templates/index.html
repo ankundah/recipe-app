@@ -8,48 +8,44 @@
     <title>Recipe Rendezvous</title>
     <style>
 
-        body {
-            background-image: linear-gradient(90deg, #f292c8, #ec89c9, #e581cc, #dd79cf, #d372d2, #d16cd4, #ce65d7, #cb5fda, #d155dc, #d74add, #dd3cde, #e327df);
-            color: #fff;
-            font-family: 'Arial', sans-serif;
-        }
+body {
+    background-image: linear-gradient(90deg, #f292c8, #ec89c9, #e581cc, #dd79cf, #d372d2, #d16cd4, #ce65d7, #cb5fda, #d155dc, #d74add, #dd3cde, #e327df);
+    color: #fff;
+    font-family: 'Arial', sans-serif;
+}
         
-        .navbar {
-            padding: 1rem 2rem;
-        }
-        
-        .navbar-brand {
-        font-weight: bold;
-    }
-    .h-container{
-        padding: 10rem 0;
-        width: 70%;
-        height: 500px;
-        background: #000;
-        border-radius: 20px;
-        margin: 40px auto;
+.navbar {
+    padding: 1rem 2rem;
+}
 
-    }
-    .display-3 {
-        font-weight: bold;
-    }
-    
-    
-    .buttons a {
-        margin: 0 10px;
-    }
-    
-    
-    .btn-custom {
-        background-color: #821f63;
-        color: white;
-        border: none;
-    }
-    
-    .btn-outline-light {
-        border-color: #fff;
-        color: #fff;
-    }
+.navbar-brand {
+    font-weight: bold;
+}
+.h-container{
+    padding: 10rem 0;
+    width: 70%;
+    height: 500px;
+    background: #000;
+    border-radius: 20px;
+    margin: 40px auto;
+}
+.display-3 {
+    font-weight: bold;
+}
+.buttons a {
+    margin: 0 10px;
+}
+
+.btn-custom {
+    background-color: #821f63;
+    color: white;
+    border: none;
+}
+
+.btn-outline-light {
+    border-color: #fff;
+    color: #fff;
+}
     </style>
 </head>
 <body>
@@ -60,9 +56,9 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item"><a class="nav-link" href="#">ABOUT</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">FEATURES</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">CONTACT</a></li>
+                <li class="nav-item"><a class="nav-link" href="{%url 'create-ui' %}">CREATE</a></li>
+                <li class="nav-item"><a class="nav-link" href="{%url 'list_tab' %}">FAVS</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'search' %}">SEARCH</a></li>
             </ul>
         </div>
     </nav>
@@ -76,8 +72,8 @@
             </div>
         </div>
     </header>
-</body>
 
+</body>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -87,10 +83,11 @@
     var auth = AsgardeoAuth.AsgardeoSPAClient.getInstance();
     
     auth.initialize({
-       signInRedirectURL: "http://127.0.0.1:8000/recipes/home",
-       clientID: "fo5f5_BUE8wKkj7Yw8lKYLXMY0Aa",
-       baseUrl: "https://localhost:9443/t/recipe.com",
-       scope: [ "openid", "profile", "create_recipe", "list_recipes", "update_recipe", "delete_recipe"]
+     signInRedirectURL: "http://127.0.0.1:8000/recipes/home",
+     signOutRedirectURL: "http://127.0.0.1:8000/recipes/index",
+     clientID: "fo5f5_BUE8wKkj7Yw8lKYLXMY0Aa",
+     baseUrl: "https://localhost:9443/t/recipe.com",
+     scope: [ "openid", "profile", "create_recipe", "list_recipes", "update_recipe", "delete_recipe"]
     });
 
     async function getToken() {
@@ -98,7 +95,7 @@
     console.log(accessToken);
     }
     function getBasicUserInfo(){
-   auth.getBasicUserInfo().then((userinfoResponse) => {
+       auth.getBasicUserInfo().then((userinfoResponse) => {
        console.log(userinfoResponse); 
        console.log(userinfoResponse.email);  
 
@@ -108,4 +105,5 @@
 }
 
     </script>
+    
  </html>   
