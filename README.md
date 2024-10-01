@@ -18,6 +18,8 @@ The app provides a CRUD API for managing recipes. Here are the endpoints:
 - **Update Recipe**: `PUT /api/<str:name>/update`
 - **Delete Recipe**: `DELETE /api/<str:name>/delete`
 
+- Link to API Documentation: {host}/swagger/
+
 ## Technologies Used
 
 - **Bootstrap**: For design and user interface.
